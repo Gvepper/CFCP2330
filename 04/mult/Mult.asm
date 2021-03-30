@@ -10,3 +10,28 @@
 // R0 >= 0, R1 >= 0, and R0*R1 < 32768.
 
 // Put your code here.
+
+    @R2
+    M=0 //set register 2 = 0
+    @R0
+    D=M
+    @count
+    M=D
+
+(LOOP)
+    @count
+    D=M //set D = count
+    @END
+    D;JEQ   //if count = 0 jump to END
+    @R1
+    D=M   //D=R1
+    @R2
+    M=M+D //sum += R1
+    @count
+    M=M-1 //decrement
+    @LOOP
+    0;JMP //jump to LOOP
+
+(END)
+    @END
+    0;JMP //inf loop
