@@ -1,0 +1,104 @@
+class JumpMan {
+    field int x, y; //screen location of CENTER of man
+    field int size; //half of width of square ("radius", if you will)
+    field int xVel;
+    field int yVel;
+    field boolean onGround;
+
+    constructor JumpMan new(int inX, int inY, int inSize) {
+        let x = inX;
+        let y = inY;
+        let size = inSize;
+        let onGround = false;
+        do draw();
+        return this;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method int getEdgeL() {
+        return x - size;
+    }
+
+    method int getEdgeR() {
+        return x + size;
+    }
+
+    method int getEdgeT() {
+        return y - size;
+    }
+
+    method int getEdgeB() {
+        return y + size;
+    }
+
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(getEdgeL(), getEdgeT(), getEdgeR(), getEdgeB());
+        return;
+    }
+
+    method void erase() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(getEdgeL(), getEdgeT(), getEdgeR(), getEdgeB());
+        return;
+    }
+
+   method void moveUp(int disp) {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, (y + size) - 1, x + size, y + size);
+        let y = y - disp;
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, x + size, y + 1);
+        return;
+    }
+
+    method void moveDown(int disp) {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, y, x + size, y + 1);
+        let y = y + disp;
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, (y + size) - 1, x + size, y + size);
+        return;
+    }
+
+    method void moveLeft(int disp) {
+        do Screen.setColor(false);
+        do Screen.drawRectangle((x + size) - 1, y, x + size, y + size);
+        let x = x - disp;
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, x + 1, y + size);
+        return;
+    }
+
+    method void moveRight(int disp) {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, y, x + 1, y + size);
+        let x = x + disp;
+        do Screen.setColor(true);
+        do Screen.drawRectangle((x + size) - 1, y, x + size, y + size);
+        return;
+    }
+
+    method void checkOnGround() {
+        if (getEdgeB() > 254) {
+            let onGround = true;
+        } else {
+            let onGround = false;
+        }
+        return;
+    }
+
+    method void fall() {
+        do checkOnGround();
+        if (~onGround) {
+            do erase();
+            let y = y + 2;
+            do draw();
+        }
+        return;
+    }
+}

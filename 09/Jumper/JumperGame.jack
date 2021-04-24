@@ -1,0 +1,45 @@
+class JumperGame {
+    field JumpMan jumpMan;
+
+    constructor JumperGame new() {
+        let jumpMan = JumpMan.new(10, 10, 5);
+        return this;
+    }
+
+    method void dispose() {
+        do jumpMan.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void moveMan() {
+        do jumpMan.fall();
+        do Sys.wait(5);
+        return;
+    }
+
+    method void run() {
+        var char key;
+        var boolean exit;
+        let exit = false;
+
+        while (~exit) {
+            while (key = 0) {
+                let key = Keyboard.keyPressed();
+                do moveMan();
+            }
+
+            if (key = 81) {
+                let exit = true;
+            }
+
+            while (~(key = 0)) {
+                let key = Keyboard.keyPressed();
+                do moveMan();
+            }
+        }
+
+
+        return;
+    }
+}
