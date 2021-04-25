@@ -32,6 +32,14 @@ class JumperGame {
 
             while (~(key = 0)) {
                 let key = Keyboard.keyPressed();
+
+                if (key = 130) {
+                    do jumpMan.moveLeft();
+                }
+                if (key = 132) {
+                    do jumpMan.moveRight();
+                }
+                
                 do jumpMan.moveStep();
             }
         }
