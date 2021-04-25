@@ -85,13 +85,6 @@ class JumpMan {
     method void calcVels() {
         if (~checkOnGround()) {     //gravitational acceleration
             let yVel = yVel + 1;
-        } else {
-            if (xVel > 0) {
-                let xVel = xVel - 1;    //friction from ground
-            }                           //I couldnt figure out how to isolate when specific keys are released so this is my workaround
-            if (xVel < 0) {
-                let xVel = xVel + 1;
-            }
         }
         
         if ((getEdgeR() + xVel) > 510) {    //check against right wall
@@ -115,6 +108,7 @@ class JumpMan {
 
     method void moveStep() {
         do erase();
+        do moveRight();
         do calcVels();
         let x = x + xVel;
         let y = y + yVel;
