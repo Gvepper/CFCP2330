@@ -2,6 +2,8 @@ class JumpMan {
     field int x, y; //screen location of CENTER of man
     field int size; //half of width of square ("radius", if you will)
     field int xVel, yVel;
+    field boolean onGround;
+    field boolean againstWall;
 
     constructor JumpMan new(int inX, int inY, int inSize) {
         let x = inX;
@@ -9,8 +11,50 @@ class JumpMan {
         let xVel = 0;
         let yVel = 0;
         let size = inSize;
+        let onGround = false;
+        let againstWall = false;
         do draw();
         return this;
+    }
+
+    method void respawn(int inX, int inY) {
+        do erase();
+        let x = inX;
+        let y = inY;
+        let xVel = 0;
+        let yVel = 0;
+        let onGround = false;
+        let againstWall = false;
+        do draw();
+        return;
+    }
+
+    method void setOnGround(boolean in) {
+        let onGround = in;
+        return;
+    }
+
+    method void setAgainstWall(boolean in) {
+        let againstWall = in;
+        return;
+    }
+
+    method void setxVel(int in) {
+        let xVel = in;
+        return;
+    }
+
+    method void setyVel(int in) {
+        let yVel = in;
+        return;
+    }
+
+    method int getxVel() {
+        return xVel;
+    }
+
+    method int getyVel() {
+        return yVel;
     }
 
     method void dispose() {
@@ -46,34 +90,18 @@ class JumpMan {
         return;
     }
 
-    method boolean checkOnGround() {
+    method boolean checkInPit() {
         if (getEdgeB() < 254) {
             return false;
         } else {
             return true;
         }
     }
-
-    // method void fall() {
-    //     do checkOnGround();
-    //     if (~onGround) {
-    //         do erase();
-    //         let y = y + 2;
-    //         do draw();
-    //     }
-    //     return;
-    // }
-
     
     method void jump() {
-        if (checkOnGround()) {
+        if (onGround) {
             let yVel = -10;
         }
-        return;
-    }
-
-    method void moveLeft() {
-        let xVel = -5;
         return;
     }
 
@@ -81,26 +109,21 @@ class JumpMan {
         let xVel = 5;
         return;
     }
+
+    method void stopMoving() {
+        let xVel = 0;
+        return;
+    }
     
     method void calcVels() {
-        if (~checkOnGround()) {     //gravitational acceleration
+        if (~onGround) {     //gravitational acceleration
             let yVel = yVel + 1;
         }
-        
-        if ((getEdgeR() + xVel) > 510) {    //check against right wall
-            let xVel = 510 - getEdgeR();
-        } else {
-            if ((getEdgeL() + xVel) < 1) {    //check against left wall
-                let xVel = 1 - getEdgeL();
-            }
-        }
 
-        if ((getEdgeB() + yVel) > 254) {    //check against bottom wall
-            let yVel = 254 - getEdgeB();
+        if (~againstWall) {
+            do moveRight();
         } else {
-            if ((getEdgeT() + yVel) < 1) {   //check against top wall
-                let yVel = 1 - getEdgeT();
-            }
+            do stopMoving();
         }
 
         return;
@@ -108,8 +131,6 @@ class JumpMan {
 
     method void moveStep() {
         do erase();
-        do moveRight();
-        do calcVels();
         let x = x + xVel;
         let y = y + yVel;
         do draw();

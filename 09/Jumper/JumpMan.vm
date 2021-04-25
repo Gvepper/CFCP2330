@@ -1,5 +1,5 @@
 function JumpMan.new 0
-push constant 5
+push constant 7
 call Memory.alloc 1
 pop pointer 0
 push argument 0
@@ -12,10 +12,75 @@ push constant 0
 pop this 4
 push argument 2
 pop this 2
+push constant 0
+pop this 5
+push constant 0
+pop this 6
 push pointer 0
 call JumpMan.draw 1
 pop temp 0
 push pointer 0
+return
+function JumpMan.respawn 0
+push argument 0
+pop pointer 0
+push pointer 0
+call JumpMan.erase 1
+pop temp 0
+push argument 1
+pop this 0
+push argument 2
+pop this 1
+push constant 0
+pop this 3
+push constant 0
+pop this 4
+push constant 0
+pop this 5
+push constant 0
+pop this 6
+push pointer 0
+call JumpMan.draw 1
+pop temp 0
+push constant 0
+return
+function JumpMan.setOnGround 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 5
+push constant 0
+return
+function JumpMan.setAgainstWall 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 6
+push constant 0
+return
+function JumpMan.setxVel 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 3
+push constant 0
+return
+function JumpMan.setyVel 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 4
+push constant 0
+return
+function JumpMan.getxVel 0
+push argument 0
+pop pointer 0
+push this 3
+return
+function JumpMan.getyVel 0
+push argument 0
+pop pointer 0
+push this 4
 return
 function JumpMan.dispose 0
 push argument 0
@@ -90,7 +155,7 @@ call Screen.drawRectangle 4
 pop temp 0
 push constant 0
 return
-function JumpMan.checkOnGround 0
+function JumpMan.checkInPit 0
 push argument 0
 pop pointer 0
 push pointer 0
@@ -111,8 +176,7 @@ label IF_END0
 function JumpMan.jump 0
 push argument 0
 pop pointer 0
-push pointer 0
-call JumpMan.checkOnGround 1
+push this 5
 if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
@@ -122,14 +186,6 @@ pop this 4
 label IF_FALSE0
 push constant 0
 return
-function JumpMan.moveLeft 0
-push argument 0
-pop pointer 0
-push constant 5
-neg
-pop this 3
-push constant 0
-return
 function JumpMan.moveRight 0
 push argument 0
 pop pointer 0
@@ -137,11 +193,17 @@ push constant 5
 pop this 3
 push constant 0
 return
+function JumpMan.stopMoving 0
+push argument 0
+pop pointer 0
+push constant 0
+pop this 3
+push constant 0
+return
 function JumpMan.calcVels 0
 push argument 0
 pop pointer 0
-push pointer 0
-call JumpMan.checkOnGround 1
+push this 5
 not
 if-goto IF_TRUE0
 goto IF_FALSE0
@@ -151,70 +213,20 @@ push constant 1
 add
 pop this 4
 label IF_FALSE0
-push pointer 0
-call JumpMan.getEdgeR 1
-push this 3
-add
-push constant 510
-gt
+push this 6
+not
 if-goto IF_TRUE1
 goto IF_FALSE1
 label IF_TRUE1
-push constant 510
 push pointer 0
-call JumpMan.getEdgeR 1
-sub
-pop this 3
+call JumpMan.moveRight 1
+pop temp 0
 goto IF_END1
 label IF_FALSE1
 push pointer 0
-call JumpMan.getEdgeL 1
-push this 3
-add
-push constant 1
-lt
-if-goto IF_TRUE2
-goto IF_FALSE2
-label IF_TRUE2
-push constant 1
-push pointer 0
-call JumpMan.getEdgeL 1
-sub
-pop this 3
-label IF_FALSE2
+call JumpMan.stopMoving 1
+pop temp 0
 label IF_END1
-push pointer 0
-call JumpMan.getEdgeB 1
-push this 4
-add
-push constant 254
-gt
-if-goto IF_TRUE3
-goto IF_FALSE3
-label IF_TRUE3
-push constant 254
-push pointer 0
-call JumpMan.getEdgeB 1
-sub
-pop this 4
-goto IF_END3
-label IF_FALSE3
-push pointer 0
-call JumpMan.getEdgeT 1
-push this 4
-add
-push constant 1
-lt
-if-goto IF_TRUE4
-goto IF_FALSE4
-label IF_TRUE4
-push constant 1
-push pointer 0
-call JumpMan.getEdgeT 1
-sub
-pop this 4
-label IF_FALSE4
-label IF_END3
 push constant 0
 return
 function JumpMan.moveStep 0
@@ -222,12 +234,6 @@ push argument 0
 pop pointer 0
 push pointer 0
 call JumpMan.erase 1
-pop temp 0
-push pointer 0
-call JumpMan.moveRight 1
-pop temp 0
-push pointer 0
-call JumpMan.calcVels 1
 pop temp 0
 push this 0
 push this 3

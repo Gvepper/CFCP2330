@@ -1,12 +1,14 @@
 function JumperGame.new 0
-push constant 1
+push constant 3
 call Memory.alloc 1
 pop pointer 0
 push constant 10
-push constant 10
+push constant 150
 push constant 5
 call JumpMan.new 3
 pop this 0
+push constant 1
+pop this 1
 push pointer 0
 return
 function JumperGame.dispose 0
@@ -20,29 +22,441 @@ call Memory.deAlloc 1
 pop temp 0
 push constant 0
 return
-function JumperGame.run 2
+function JumperGame.checkOnPlatform 0
+push argument 0
+pop pointer 0
+push this 0
+call JumpMan.getEdgeR 1
+push argument 1
+call Platform.getEdgeL 1
+gt
+push this 0
+call JumpMan.getEdgeL 1
+push argument 1
+call Platform.getEdgeR 1
+lt
+and
+push this 0
+call JumpMan.getEdgeB 1
+push argument 1
+call Platform.getEdgeT 1
+push constant 1
+sub
+eq
+and
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+return
+goto IF_END0
+label IF_FALSE0
+push constant 0
+return
+label IF_END0
+function JumperGame.checkAgainstPlatform 0
+push argument 0
+pop pointer 0
+push this 0
+call JumpMan.getEdgeB 1
+push argument 1
+call Platform.getEdgeT 1
+gt
+push this 0
+call JumpMan.getEdgeT 1
+push argument 1
+call Platform.getEdgeB 1
+lt
+and
+push this 0
+call JumpMan.getEdgeR 1
+push argument 1
+call Platform.getEdgeL 1
+push constant 1
+sub
+eq
+and
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+return
+goto IF_END0
+label IF_FALSE0
+push constant 0
+return
+label IF_END0
+function JumperGame.checkOnPlatforms 2
 push argument 0
 pop pointer 0
 push constant 0
+pop local 0
+push constant 0
 pop local 1
 label WHILE_EXP0
+push local 0
+push argument 2
+lt
+not
+if-goto WHILE_END0
+push pointer 0
+push local 0
+push argument 1
+add
+pop pointer 1
+push that 0
+call JumperGame.checkOnPlatform 2
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+pop local 1
+label IF_FALSE0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push this 0
 push local 1
+call JumpMan.setOnGround 2
+pop temp 0
+push constant 0
+return
+function JumperGame.checkAgainstPlatforms 2
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+push constant 0
+pop local 1
+label WHILE_EXP0
+push local 0
+push argument 2
+lt
+not
+if-goto WHILE_END0
+push pointer 0
+push local 0
+push argument 1
+add
+pop pointer 1
+push that 0
+call JumperGame.checkAgainstPlatform 2
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+pop local 1
+label IF_FALSE0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push this 0
+push local 1
+call JumpMan.setAgainstWall 2
+pop temp 0
+push constant 0
+return
+function JumperGame.velocityTruncateForBorder 0
+push argument 0
+pop pointer 0
+push this 0
+call JumpMan.getEdgeR 1
+push this 0
+call JumpMan.getxVel 1
+add
+push constant 510
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 0
+push constant 510
+push this 0
+call JumpMan.getEdgeR 1
+sub
+call JumpMan.setxVel 2
+pop temp 0
+goto IF_END0
+label IF_FALSE0
+push this 0
+call JumpMan.getEdgeL 1
+push this 0
+call JumpMan.getxVel 1
+add
+push constant 1
+lt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push this 0
+push constant 1
+push this 0
+call JumpMan.getEdgeL 1
+sub
+call JumpMan.setxVel 2
+pop temp 0
+label IF_FALSE1
+label IF_END0
+push this 0
+call JumpMan.getEdgeB 1
+push this 0
+call JumpMan.getyVel 1
+add
+push constant 254
+gt
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push this 0
+push constant 254
+push this 0
+call JumpMan.getEdgeB 1
+sub
+call JumpMan.setyVel 2
+pop temp 0
+goto IF_END2
+label IF_FALSE2
+push this 0
+call JumpMan.getEdgeT 1
+push this 0
+call JumpMan.getyVel 1
+add
+push constant 1
+lt
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push this 0
+push constant 1
+push this 0
+call JumpMan.getEdgeT 1
+sub
+call JumpMan.setyVel 2
+pop temp 0
+label IF_FALSE3
+label IF_END2
+push constant 0
+return
+function JumperGame.velocityTruncateForPlatform 2
+push argument 0
+pop pointer 0
+push this 0
+call JumpMan.getEdgeR 1
+push this 0
+call JumpMan.getxVel 1
+add
+push argument 1
+call Platform.getEdgeL 1
+push constant 1
+sub
+gt
+push this 0
+call JumpMan.getEdgeL 1
+push this 0
+call JumpMan.getxVel 1
+add
+push argument 1
+call Platform.getEdgeL 1
+push constant 1
+add
+lt
+and
+push this 0
+call JumpMan.getEdgeB 1
+push this 0
+call JumpMan.getyVel 1
+add
+push argument 1
+call Platform.getEdgeT 1
+push constant 1
+sub
+gt
+and
+push this 0
+call JumpMan.getEdgeT 1
+push this 0
+call JumpMan.getyVel 1
+add
+push argument 1
+call Platform.getEdgeB 1
+push constant 1
+add
+lt
+and
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 1
+call Platform.getEdgeL 1
+push constant 1
+sub
+pop local 0
+push this 0
+push local 0
+push this 0
+call JumpMan.getEdgeR 1
+sub
+call JumpMan.setxVel 2
+pop temp 0
+label IF_FALSE0
+push this 0
+call JumpMan.getEdgeB 1
+push this 0
+call JumpMan.getyVel 1
+add
+push argument 1
+call Platform.getEdgeT 1
+push constant 1
+sub
+gt
+push this 0
+call JumpMan.getEdgeT 1
+push this 0
+call JumpMan.getyVel 1
+add
+push argument 1
+call Platform.getEdgeB 1
+push constant 1
+add
+lt
+and
+push this 0
+call JumpMan.getEdgeR 1
+push this 0
+call JumpMan.getxVel 1
+add
+push argument 1
+call Platform.getEdgeL 1
+push constant 1
+sub
+gt
+and
+push this 0
+call JumpMan.getEdgeL 1
+push this 0
+call JumpMan.getxVel 1
+add
+push argument 1
+call Platform.getEdgeR 1
+push constant 1
+add
+lt
+and
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push argument 1
+call Platform.getEdgeT 1
+push constant 1
+sub
+pop local 1
+push this 0
+push local 1
+push this 0
+call JumpMan.getEdgeB 1
+sub
+call JumpMan.setyVel 2
+pop temp 0
+label IF_FALSE1
+push constant 0
+return
+function JumperGame.velocityTruncateForPlatforms 1
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push argument 2
+lt
+not
+if-goto WHILE_END0
+push pointer 0
+push local 0
+push argument 1
+add
+pop pointer 1
+push that 0
+call JumperGame.velocityTruncateForPlatform 2
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function JumperGame.run 0
+push argument 0
+pop pointer 0
+push constant 0
+pop this 2
+label WHILE_EXP0
+push this 2
 not
 not
 if-goto WHILE_END0
-label WHILE_EXP1
-push local 0
+push pointer 0
+call JumperGame.level1 1
+pop temp 0
+goto WHILE_EXP0
+label WHILE_END0
 push constant 0
-eq
+return
+function JumperGame.level1 3
+push argument 0
+pop pointer 0
+push constant 2
+pop local 2
+push local 2
+call Array.new 1
+pop local 1
+push constant 0
+push local 1
+add
+push constant 1
+push constant 200
+push constant 510
+push constant 254
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 1
+push local 1
+add
+push constant 450
+push constant 150
+push constant 510
+push constant 254
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+label WHILE_EXP0
+push this 2
 not
-if-goto WHILE_END1
+push this 1
+push constant 1
+eq
+and
+not
+if-goto WHILE_END0
 call Keyboard.keyPressed 0
 pop local 0
-push this 0
-call JumpMan.moveStep 1
-pop temp 0
-goto WHILE_EXP1
-label WHILE_END1
 push local 0
 push constant 81
 eq
@@ -51,15 +465,8 @@ goto IF_FALSE0
 label IF_TRUE0
 push constant 0
 not
-pop local 1
+pop this 2
 label IF_FALSE0
-label WHILE_EXP2
-push local 0
-push constant 0
-eq
-not
-not
-if-goto WHILE_END2
 push local 0
 push constant 131
 eq
@@ -70,13 +477,30 @@ push this 0
 call JumpMan.jump 1
 pop temp 0
 label IF_FALSE1
-call Keyboard.keyPressed 0
-pop local 0
+push pointer 0
+push local 1
+push local 2
+call JumperGame.checkOnPlatforms 3
+pop temp 0
+push pointer 0
+push local 1
+push local 2
+call JumperGame.checkAgainstPlatforms 3
+pop temp 0
+push this 0
+call JumpMan.calcVels 1
+pop temp 0
+push pointer 0
+call JumperGame.velocityTruncateForBorder 1
+pop temp 0
+push pointer 0
+push local 1
+push local 2
+call JumperGame.velocityTruncateForPlatforms 3
+pop temp 0
 push this 0
 call JumpMan.moveStep 1
 pop temp 0
-goto WHILE_EXP2
-label WHILE_END2
 goto WHILE_EXP0
 label WHILE_END0
 push constant 0

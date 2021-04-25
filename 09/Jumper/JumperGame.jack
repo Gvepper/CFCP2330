@@ -1,8 +1,11 @@
 class JumperGame {
     field JumpMan jumpMan;
+    field int levelNum;
+    field boolean exit;
 
     constructor JumperGame new() {
-        let jumpMan = JumpMan.new(10, 10, 5);
+        let jumpMan = JumpMan.new(10, 150, 5);
+        let levelNum = 1;
         return this;
     }
 
@@ -12,33 +15,155 @@ class JumperGame {
         return;
     }
 
+    method boolean checkOnPlatform(Platform plat) {
+        if ((jumpMan.getEdgeR() > plat.getEdgeL()) &
+            (jumpMan.getEdgeL() < plat.getEdgeR()) &
+            (jumpMan.getEdgeB() = (plat.getEdgeT() - 1))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    method boolean checkAgainstPlatform(Platform plat) {
+        if ((jumpMan.getEdgeB() > plat.getEdgeT()) &
+            (jumpMan.getEdgeT() < plat.getEdgeB()) &
+            (jumpMan.getEdgeR() = (plat.getEdgeL() - 1))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    method void checkOnPlatforms(Array platArr, int size) {
+        var int i;
+        var boolean og;
+        let i = 0;
+        let og = false;
+
+        while (i < size) {
+            if (checkOnPlatform(platArr[i])) {
+                let og = true;
+            }
+            let i = i + 1;
+        }
+
+        do jumpMan.setOnGround(og);
+        return;
+    }
+
+    method void checkAgainstPlatforms(Array platArr, int size) {
+        var int i;
+        var boolean aw;
+        let i = 0;
+        let aw = false;
+
+        while (i < size) {
+            if (checkAgainstPlatform(platArr[i])) {
+                let aw = true;
+            }
+            let i = i + 1;
+        }
+
+        do jumpMan.setAgainstWall(aw);
+        return;
+    }
+
+    method void velocityTruncateForBorder() {
+        if ((jumpMan.getEdgeR() + jumpMan.getxVel()) > 510) {    //check against right border
+            do jumpMan.setxVel(510 - jumpMan.getEdgeR());
+        } else {
+            if ((jumpMan.getEdgeL() + jumpMan.getxVel()) < 1) {    //check against left border
+                do jumpMan.setxVel(1 - jumpMan.getEdgeL());
+            }
+        }
+
+        if ((jumpMan.getEdgeB() + jumpMan.getyVel()) > 254) {    //check against bottom border
+            do jumpMan.setyVel(254 - jumpMan.getEdgeB());
+        } else {
+            if ((jumpMan.getEdgeT() + jumpMan.getyVel()) < 1) {   //check against top border
+                do jumpMan.setyVel(1 - jumpMan.getEdgeT());
+            }
+        }
+
+        return;
+    }
+
+    method void velocityTruncateForPlatform(Platform plat) {
+        var int x;
+        var int y;
+
+        if (((jumpMan.getEdgeR() + jumpMan.getxVel()) > (plat.getEdgeL() - 1)) &
+            ((jumpMan.getEdgeL() + jumpMan.getxVel()) < (plat.getEdgeL() + 1)) &
+            ((jumpMan.getEdgeB() + jumpMan.getyVel()) > (plat.getEdgeT() - 1)) &
+            ((jumpMan.getEdgeT() + jumpMan.getyVel()) < (plat.getEdgeB() + 1))) {
+            let x = plat.getEdgeL() - 1;
+            do jumpMan.setxVel(x - jumpMan.getEdgeR());
+        }
+
+        if (((jumpMan.getEdgeB() + jumpMan.getyVel()) > (plat.getEdgeT() - 1)) &
+            ((jumpMan.getEdgeT() + jumpMan.getyVel()) < (plat.getEdgeB() + 1)) &
+            ((jumpMan.getEdgeR() + jumpMan.getxVel()) > (plat.getEdgeL() - 1)) &
+            ((jumpMan.getEdgeL() + jumpMan.getxVel()) < (plat.getEdgeR() + 1))) {
+            let y = plat.getEdgeT() - 1;
+            do jumpMan.setyVel(y - jumpMan.getEdgeB());
+        }
+
+        return;
+    }
+
+    method void velocityTruncateForPlatforms(Array platArr, int size) {
+        var int i;
+        let i = 0;
+
+        while (i < size) {
+            do velocityTruncateForPlatform(platArr[i]);
+            let i = i + 1;
+        }
+        return;
+    }
+
     method void run() {
-        var char key;
-        var boolean exit;
         let exit = false;
 
         while (~exit) {
-            while (key = 0) {
-                let key = Keyboard.keyPressed();
-                do jumpMan.moveStep();
-            }
+            do level1();
+            //TODO: add more levels
+        }
+
+        return;
+    }
+
+    method void level1() {
+        var char key;
+        var Array platformArr;
+        var int numPlats;
+
+        let numPlats = 2;
+        let platformArr = Array.new(numPlats);
+        let platformArr[0] = Platform.new(1, 200, 510, 254);
+        let platformArr[1] = Platform.new(450, 150, 510, 254);
+
+        while (~exit & (levelNum = 1)) {
+            let key = Keyboard.keyPressed();
 
             if (key = 81) {
                 let exit = true;
             }
-            
-            while (~(key = 0)) {
-
-                if (key = 131) {
-                    do jumpMan.jump();
-                }
-                
-                let key = Keyboard.keyPressed();
-                do jumpMan.moveStep();
+            if (key = 131) {
+                do jumpMan.jump();
             }
-        }
 
+            do checkOnPlatforms(platformArr, numPlats);
+            do checkAgainstPlatforms(platformArr, numPlats);
+            do jumpMan.calcVels();
+            do velocityTruncateForBorder();
+            do velocityTruncateForPlatforms(platformArr, numPlats);
+            do jumpMan.moveStep();
+        }
 
         return;
     }
+
+
 }

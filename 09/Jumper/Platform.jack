@@ -1,0 +1,58 @@
+class Platform {
+    field int left, right, top, bottom;
+
+    constructor Platform new(int Aleft, int Atop, int Aright, int Abottom) {
+        if (Aleft < 0) {
+            let Aleft = 0;
+        }
+        if (Atop < 0) {
+            let Atop = 0;
+        }
+        if (Aright > 511) {
+            let Aright = 511;
+        }
+        if (Abottom > 255) {
+            let Abottom = 255;
+        }
+
+        let left = Aleft;
+        let top = Atop;
+        let right = Aright;
+        let bottom = Abottom;
+        do draw();
+        return this;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method int getEdgeL() {
+        return left;
+    }
+
+    method int getEdgeR() {
+        return right;
+    }
+
+    method int getEdgeT() {
+        return top;
+    }
+
+    method int getEdgeB() {
+        return bottom;
+    }
+
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(left, top, right, bottom);
+        return;
+    }
+
+    method void erase() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(left, top, right, bottom);
+        return;
+    }
+}
