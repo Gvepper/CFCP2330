@@ -12,12 +12,6 @@ class JumperGame {
         return;
     }
 
-    method void moveMan() {
-        do jumpMan.fall();
-        do Sys.wait(5);
-        return;
-    }
-
     method void run() {
         var char key;
         var boolean exit;
@@ -26,16 +20,19 @@ class JumperGame {
         while (~exit) {
             while (key = 0) {
                 let key = Keyboard.keyPressed();
-                do moveMan();
+                do jumpMan.moveStep();
             }
 
             if (key = 81) {
                 let exit = true;
             }
+            if (key = 131) {
+                do jumpMan.jump();
+            }
 
             while (~(key = 0)) {
                 let key = Keyboard.keyPressed();
-                do moveMan();
+                do jumpMan.moveStep();
             }
         }
 

@@ -1,15 +1,14 @@
 class JumpMan {
     field int x, y; //screen location of CENTER of man
     field int size; //half of width of square ("radius", if you will)
-    field int xVel;
-    field int yVel;
-    field boolean onGround;
+    field int xVel, yVel;
 
     constructor JumpMan new(int inX, int inY, int inSize) {
         let x = inX;
         let y = inY;
+        let xVel = 0;
+        let yVel = 0;
         let size = inSize;
-        let onGround = false;
         do draw();
         return this;
     }
@@ -47,58 +46,63 @@ class JumpMan {
         return;
     }
 
-   method void moveUp(int disp) {
-        do Screen.setColor(false);
-        do Screen.drawRectangle(x, (y + size) - 1, x + size, y + size);
-        let y = y - disp;
-        do Screen.setColor(true);
-        do Screen.drawRectangle(x, y, x + size, y + 1);
-        return;
-    }
-
-    method void moveDown(int disp) {
-        do Screen.setColor(false);
-        do Screen.drawRectangle(x, y, x + size, y + 1);
-        let y = y + disp;
-        do Screen.setColor(true);
-        do Screen.drawRectangle(x, (y + size) - 1, x + size, y + size);
-        return;
-    }
-
-    method void moveLeft(int disp) {
-        do Screen.setColor(false);
-        do Screen.drawRectangle((x + size) - 1, y, x + size, y + size);
-        let x = x - disp;
-        do Screen.setColor(true);
-        do Screen.drawRectangle(x, y, x + 1, y + size);
-        return;
-    }
-
-    method void moveRight(int disp) {
-        do Screen.setColor(false);
-        do Screen.drawRectangle(x, y, x + 1, y + size);
-        let x = x + disp;
-        do Screen.setColor(true);
-        do Screen.drawRectangle((x + size) - 1, y, x + size, y + size);
-        return;
-    }
-
-    method void checkOnGround() {
-        if (getEdgeB() > 254) {
-            let onGround = true;
+    method boolean checkOnGround() {
+        if (getEdgeB() < 254) {
+            return false;
         } else {
-            let onGround = false;
+            return true;
+        }
+    }
+
+    // method void fall() {
+    //     do checkOnGround();
+    //     if (~onGround) {
+    //         do erase();
+    //         let y = y + 2;
+    //         do draw();
+    //     }
+    //     return;
+    // }
+
+    
+    method void jump() {
+        if (checkOnGround()) {
+            let yVel = -10;
         }
         return;
     }
-
-    method void fall() {
-        do checkOnGround();
-        if (~onGround) {
-            do erase();
-            let y = y + 2;
-            do draw();
+    
+    method void calcVels() {
+        if (~checkOnGround()) {     //gravitational acceleration
+            let yVel = yVel + 1;
         }
+        
+        if ((getEdgeR() + xVel) > 510) {    //check against right wall
+            let xVel = 510 - getEdgeR();
+        } else {
+            if ((getEdgeL() + xVel) < 1) {    //check against left wall
+                let xVel = 1 - getEdgeL();
+            }
+        }
+
+        if ((getEdgeB() + yVel) > 254) {    //check against bottom wall
+            let yVel = 254 - getEdgeB();
+        } else {
+            if ((getEdgeT() + yVel) < 1) {   //check against top wall
+                let yVel = 1 - getEdgeT();
+            }
+        }
+
+        return;
+    }
+
+    method void moveStep() {
+        do erase();
+        do calcVels();
+        let x = x + xVel;
+        let y = y + yVel;
+        do draw();
+        do Sys.wait(25);
         return;
     }
 }
