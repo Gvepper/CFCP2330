@@ -97,16 +97,24 @@ class JumpMan {
             return true;
         }
     }
+
+    method boolean checkAtEnd() {
+        if (getEdgeR() < 510) {
+            return false;
+        } else {
+            return true;
+        }
+    }
     
     method void jump() {
         if (onGround) {
-            let yVel = -10;
+            let yVel = -9;
         }
         return;
     }
 
     method void moveRight() {
-        let xVel = 5;
+        let xVel = 4;
         return;
     }
 

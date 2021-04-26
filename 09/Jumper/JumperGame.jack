@@ -35,13 +35,13 @@ class JumperGame {
         }
     }
 
-    method void checkOnPlatforms(Array platArr, int size) {
+    method void checkOnPlatforms(Array platArr) {
         var int i;
         var boolean og;
         let i = 0;
         let og = false;
 
-        while (i < size) {
+        while (~(platArr[i] = null)) {
             if (checkOnPlatform(platArr[i])) {
                 let og = true;
             }
@@ -52,13 +52,13 @@ class JumperGame {
         return;
     }
 
-    method void checkAgainstPlatforms(Array platArr, int size) {
+    method void checkAgainstPlatforms(Array platArr) {
         var int i;
         var boolean aw;
         let i = 0;
         let aw = false;
 
-        while (i < size) {
+        while (~(platArr[i] = null)) {
             if (checkAgainstPlatform(platArr[i])) {
                 let aw = true;
             }
@@ -112,11 +112,11 @@ class JumperGame {
         return;
     }
 
-    method void velocityTruncateForPlatforms(Array platArr, int size) {
+    method void velocityTruncateForPlatforms(Array platArr) {
         var int i;
         let i = 0;
 
-        while (i < size) {
+        while (~(platArr[i] = null)) {
             do velocityTruncateForPlatform(platArr[i]);
             let i = i + 1;
         }
@@ -126,23 +126,59 @@ class JumperGame {
     method void run() {
         let exit = false;
 
-        while (~exit) {
-            do level1();
-            //TODO: add more levels
+        do level1();
+        do level2();
+        do level3();
+        do level4();
+        do level5();
+        //TODO: add more levels
+
+        if (~exit) {
+            //win game
         }
 
+        return;
+    }
+
+    method void nextLevel(Array platArr) {
+        var int i;
+        var Platform p;
+        let i = 0;
+
+        while (~(platArr[i] = null)) {
+            let p = platArr[i];
+            do p.erase();
+            let i = i + 1;
+        }
+
+        let i = i - 1;
+
+        while (~(i < 0)) {
+            let p = platArr[i];
+            do p.dispose();
+            let i = i - 1;
+        }
+
+        let levelNum = levelNum + 1;
         return;
     }
 
     method void level1() {
         var char key;
         var Array platformArr;
-        var int numPlats;
+        var int spawnX;
+        var int spawnY;
+        
+        //set spawn point
+        let spawnX = 5;
+        let spawnY = 194;
 
-        let numPlats = 2;
-        let platformArr = Array.new(numPlats);
-        let platformArr[0] = Platform.new(1, 200, 510, 254);
-        let platformArr[1] = Platform.new(450, 150, 510, 254);
+        do jumpMan.respawn(spawnX, spawnY);
+
+        let platformArr = Array.new(3);
+        let platformArr[0] = Platform.new(1, 200, 200, 254);
+        let platformArr[1] = Platform.new(200, 155, 300, 254);
+        let platformArr[2] = Platform.new(300, 200, 511, 254);
 
         while (~exit & (levelNum = 1)) {
             let key = Keyboard.keyPressed();
@@ -154,16 +190,211 @@ class JumperGame {
                 do jumpMan.jump();
             }
 
-            do checkOnPlatforms(platformArr, numPlats);
-            do checkAgainstPlatforms(platformArr, numPlats);
+            do checkOnPlatforms(platformArr);
+            do checkAgainstPlatforms(platformArr);
             do jumpMan.calcVels();
             do velocityTruncateForBorder();
-            do velocityTruncateForPlatforms(platformArr, numPlats);
+            do velocityTruncateForPlatforms(platformArr);
             do jumpMan.moveStep();
+
+            if (jumpMan.checkInPit()) {
+                do jumpMan.respawn(spawnX, spawnY);
+            }
+            if (jumpMan.checkAtEnd()) {
+                do nextLevel(platformArr);
+            }
         }
 
         return;
     }
 
+    method void level2() {
+        var char key;
+        var Array platformArr;
+        var int spawnX;
+        var int spawnY;
 
+        //set spawn point
+        let spawnX = 5;
+        let spawnY = 194;
+
+        do jumpMan.respawn(spawnX, spawnY);
+
+        let platformArr = Array.new(2);
+        let platformArr[0] = Platform.new(1, 200, 220, 254);
+        let platformArr[1] = Platform.new(290, 200, 510, 254);
+
+        while (~exit & (levelNum = 2)) {
+            let key = Keyboard.keyPressed();
+
+            if (key = 81) {
+                let exit = true;
+            }
+            if (key = 131) {
+                do jumpMan.jump();
+            }
+
+            do checkOnPlatforms(platformArr);
+            do checkAgainstPlatforms(platformArr);
+            do jumpMan.calcVels();
+            do velocityTruncateForBorder();
+            do velocityTruncateForPlatforms(platformArr);
+            do jumpMan.moveStep();
+
+            if (jumpMan.checkInPit()) {
+                do jumpMan.respawn(spawnX, spawnY);
+            }
+            if (jumpMan.checkAtEnd()) {
+                do nextLevel(platformArr);
+            }
+        }
+
+        return;
+    }
+
+    method void level3() {
+        var char key;
+        var Array platformArr;
+        var int spawnX;
+        var int spawnY;
+
+        //set spawn point
+        let spawnX = 5;
+        let spawnY = 194;
+
+        do jumpMan.respawn(spawnX, spawnY);
+
+        let platformArr = Array.new(3);
+        let platformArr[0] = Platform.new(1, 200, 200, 254);
+        let platformArr[1] = Platform.new(250, 200, 255, 254);
+        let platformArr[2] = Platform.new(305, 200, 510, 254);
+
+        while (~exit & (levelNum = 3)) {
+            let key = Keyboard.keyPressed();
+
+            if (key = 81) {
+                let exit = true;
+            }
+            if (key = 131) {
+                do jumpMan.jump();
+            }
+
+            do checkOnPlatforms(platformArr);
+            do checkAgainstPlatforms(platformArr);
+            do jumpMan.calcVels();
+            do velocityTruncateForBorder();
+            do velocityTruncateForPlatforms(platformArr);
+            do jumpMan.moveStep();
+
+            if (jumpMan.checkInPit()) {
+                do jumpMan.respawn(spawnX, spawnY);
+            }
+            if (jumpMan.checkAtEnd()) {
+                do nextLevel(platformArr);
+            }
+        }
+
+        return;
+    }
+
+    method void level4() {
+        var char key;
+        var Array platformArr;
+        var int spawnX;
+        var int spawnY;
+
+        //set spawn point
+        let spawnX = 5;
+        let spawnY = 194;
+
+        do jumpMan.respawn(spawnX, spawnY);
+
+        let platformArr = Array.new(6);
+        let platformArr[0] = Platform.new(1, 200, 100, 254);
+        let platformArr[1] = Platform.new(115, 170, 150, 180);
+        let platformArr[2] = Platform.new(165, 140, 200, 150);
+        let platformArr[3] = Platform.new(215, 110, 250, 120);
+        let platformArr[4] = Platform.new(265, 80, 300, 90);
+        let platformArr[5] = Platform.new(325, 50, 510, 254);
+
+
+        while (~exit & (levelNum = 4)) {
+            let key = Keyboard.keyPressed();
+
+            if (key = 81) {
+                let exit = true;
+            }
+            if (key = 131) {
+                do jumpMan.jump();
+            }
+
+            do checkOnPlatforms(platformArr);
+            do checkAgainstPlatforms(platformArr);
+            do jumpMan.calcVels();
+            do velocityTruncateForBorder();
+            do velocityTruncateForPlatforms(platformArr);
+            do jumpMan.moveStep();
+
+            if (jumpMan.checkInPit()) {
+                do jumpMan.respawn(spawnX, spawnY);
+            }
+            if (jumpMan.checkAtEnd()) {
+                do nextLevel(platformArr);
+            }
+        }
+
+        return;
+    }
+
+    method void level5() {
+        var char key;
+        var Array platformArr;
+        var int spawnX;
+        var int spawnY;
+
+        //set spawn point
+        let spawnX = 5;
+        let spawnY = 44;
+
+        do jumpMan.respawn(spawnX, spawnY);
+
+        let platformArr = Array.new(9);
+        let platformArr[0] = Platform.new(1, 50, 100, 254);
+        let platformArr[1] = Platform.new(175, 240, 185, 250);
+        let platformArr[2] = Platform.new(215, 210, 225, 220);
+        let platformArr[3] = Platform.new(255, 240, 265, 250);
+        let platformArr[4] = Platform.new(295, 210, 305, 220);
+        let platformArr[5] = Platform.new(335, 240, 345, 250);
+        let platformArr[6] = Platform.new(375, 210, 385, 220);
+        let platformArr[7] = Platform.new(415, 240, 425, 250);
+        let platformArr[8] = Platform.new(455, 210, 510, 220);
+
+
+        while (~exit & (levelNum = 5)) {
+            let key = Keyboard.keyPressed();
+
+            if (key = 81) {
+                let exit = true;
+            }
+            if (key = 131) {
+                do jumpMan.jump();
+            }
+
+            do checkOnPlatforms(platformArr);
+            do checkAgainstPlatforms(platformArr);
+            do jumpMan.calcVels();
+            do velocityTruncateForBorder();
+            do velocityTruncateForPlatforms(platformArr);
+            do jumpMan.moveStep();
+
+            if (jumpMan.checkInPit()) {
+                do jumpMan.respawn(spawnX, spawnY);
+            }
+            if (jumpMan.checkAtEnd()) {
+                do nextLevel(platformArr);
+            }
+        }
+
+        return;
+    }
 }

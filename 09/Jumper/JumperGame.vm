@@ -97,8 +97,13 @@ push constant 0
 pop local 1
 label WHILE_EXP0
 push local 0
-push argument 2
-lt
+push argument 1
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
 not
 if-goto WHILE_END0
 push pointer 0
@@ -136,8 +141,13 @@ push constant 0
 pop local 1
 label WHILE_EXP0
 push local 0
-push argument 2
-lt
+push argument 1
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
 not
 if-goto WHILE_END0
 push pointer 0
@@ -377,8 +387,13 @@ push constant 0
 pop local 0
 label WHILE_EXP0
 push local 0
-push argument 2
-lt
+push argument 1
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
 not
 if-goto WHILE_END0
 push pointer 0
@@ -402,24 +417,105 @@ push argument 0
 pop pointer 0
 push constant 0
 pop this 2
-label WHILE_EXP0
-push this 2
-not
-not
-if-goto WHILE_END0
 push pointer 0
 call JumperGame.level1 1
 pop temp 0
-goto WHILE_EXP0
-label WHILE_END0
+push pointer 0
+call JumperGame.level2 1
+pop temp 0
+push pointer 0
+call JumperGame.level3 1
+pop temp 0
+push pointer 0
+call JumperGame.level4 1
+pop temp 0
+push pointer 0
+call JumperGame.level5 1
+pop temp 0
+push this 2
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+label IF_FALSE0
 push constant 0
 return
-function JumperGame.level1 3
+function JumperGame.nextLevel 2
 push argument 0
 pop pointer 0
-push constant 2
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push argument 1
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+not
+if-goto WHILE_END0
+push local 0
+push argument 1
+add
+pop pointer 1
+push that 0
+pop local 1
+push local 1
+call Platform.erase 1
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push local 0
+push constant 1
+sub
+pop local 0
+label WHILE_EXP1
+push local 0
+push constant 0
+lt
+not
+not
+if-goto WHILE_END1
+push local 0
+push argument 1
+add
+pop pointer 1
+push that 0
+pop local 1
+push local 1
+call Platform.dispose 1
+pop temp 0
+push local 0
+push constant 1
+sub
+pop local 0
+goto WHILE_EXP1
+label WHILE_END1
+push this 1
+push constant 1
+add
+pop this 1
+push constant 0
+return
+function JumperGame.level1 4
+push argument 0
+pop pointer 0
+push constant 5
 pop local 2
+push constant 194
+pop local 3
+push this 0
 push local 2
+push local 3
+call JumpMan.respawn 3
+pop temp 0
+push constant 3
 call Array.new 1
 pop local 1
 push constant 0
@@ -427,7 +523,7 @@ push local 1
 add
 push constant 1
 push constant 200
-push constant 510
+push constant 200
 push constant 254
 call Platform.new 4
 pop temp 0
@@ -437,9 +533,21 @@ pop that 0
 push constant 1
 push local 1
 add
-push constant 450
-push constant 150
-push constant 510
+push constant 200
+push constant 155
+push constant 300
+push constant 254
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 2
+push local 1
+add
+push constant 300
+push constant 200
+push constant 511
 push constant 254
 call Platform.new 4
 pop temp 0
@@ -479,13 +587,11 @@ pop temp 0
 label IF_FALSE1
 push pointer 0
 push local 1
-push local 2
-call JumperGame.checkOnPlatforms 3
+call JumperGame.checkOnPlatforms 2
 pop temp 0
 push pointer 0
 push local 1
-push local 2
-call JumperGame.checkAgainstPlatforms 3
+call JumperGame.checkAgainstPlatforms 2
 pop temp 0
 push this 0
 call JumpMan.calcVels 1
@@ -495,12 +601,640 @@ call JumperGame.velocityTruncateForBorder 1
 pop temp 0
 push pointer 0
 push local 1
-push local 2
-call JumperGame.velocityTruncateForPlatforms 3
+call JumperGame.velocityTruncateForPlatforms 2
 pop temp 0
 push this 0
 call JumpMan.moveStep 1
 pop temp 0
+push this 0
+call JumpMan.checkInPit 1
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push this 0
+push local 2
+push local 3
+call JumpMan.respawn 3
+pop temp 0
+label IF_FALSE2
+push this 0
+call JumpMan.checkAtEnd 1
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push pointer 0
+push local 1
+call JumperGame.nextLevel 2
+pop temp 0
+label IF_FALSE3
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function JumperGame.level2 4
+push argument 0
+pop pointer 0
+push constant 5
+pop local 2
+push constant 194
+pop local 3
+push this 0
+push local 2
+push local 3
+call JumpMan.respawn 3
+pop temp 0
+push constant 2
+call Array.new 1
+pop local 1
+push constant 0
+push local 1
+add
+push constant 1
+push constant 200
+push constant 220
+push constant 254
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 1
+push local 1
+add
+push constant 290
+push constant 200
+push constant 510
+push constant 254
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+label WHILE_EXP0
+push this 2
+not
+push this 1
+push constant 2
+eq
+and
+not
+if-goto WHILE_END0
+call Keyboard.keyPressed 0
+pop local 0
+push local 0
+push constant 81
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+pop this 2
+label IF_FALSE0
+push local 0
+push constant 131
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push this 0
+call JumpMan.jump 1
+pop temp 0
+label IF_FALSE1
+push pointer 0
+push local 1
+call JumperGame.checkOnPlatforms 2
+pop temp 0
+push pointer 0
+push local 1
+call JumperGame.checkAgainstPlatforms 2
+pop temp 0
+push this 0
+call JumpMan.calcVels 1
+pop temp 0
+push pointer 0
+call JumperGame.velocityTruncateForBorder 1
+pop temp 0
+push pointer 0
+push local 1
+call JumperGame.velocityTruncateForPlatforms 2
+pop temp 0
+push this 0
+call JumpMan.moveStep 1
+pop temp 0
+push this 0
+call JumpMan.checkInPit 1
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push this 0
+push local 2
+push local 3
+call JumpMan.respawn 3
+pop temp 0
+label IF_FALSE2
+push this 0
+call JumpMan.checkAtEnd 1
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push pointer 0
+push local 1
+call JumperGame.nextLevel 2
+pop temp 0
+label IF_FALSE3
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function JumperGame.level3 4
+push argument 0
+pop pointer 0
+push constant 5
+pop local 2
+push constant 194
+pop local 3
+push this 0
+push local 2
+push local 3
+call JumpMan.respawn 3
+pop temp 0
+push constant 3
+call Array.new 1
+pop local 1
+push constant 0
+push local 1
+add
+push constant 1
+push constant 200
+push constant 200
+push constant 254
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 1
+push local 1
+add
+push constant 250
+push constant 200
+push constant 255
+push constant 254
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 2
+push local 1
+add
+push constant 305
+push constant 200
+push constant 510
+push constant 254
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+label WHILE_EXP0
+push this 2
+not
+push this 1
+push constant 3
+eq
+and
+not
+if-goto WHILE_END0
+call Keyboard.keyPressed 0
+pop local 0
+push local 0
+push constant 81
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+pop this 2
+label IF_FALSE0
+push local 0
+push constant 131
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push this 0
+call JumpMan.jump 1
+pop temp 0
+label IF_FALSE1
+push pointer 0
+push local 1
+call JumperGame.checkOnPlatforms 2
+pop temp 0
+push pointer 0
+push local 1
+call JumperGame.checkAgainstPlatforms 2
+pop temp 0
+push this 0
+call JumpMan.calcVels 1
+pop temp 0
+push pointer 0
+call JumperGame.velocityTruncateForBorder 1
+pop temp 0
+push pointer 0
+push local 1
+call JumperGame.velocityTruncateForPlatforms 2
+pop temp 0
+push this 0
+call JumpMan.moveStep 1
+pop temp 0
+push this 0
+call JumpMan.checkInPit 1
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push this 0
+push local 2
+push local 3
+call JumpMan.respawn 3
+pop temp 0
+label IF_FALSE2
+push this 0
+call JumpMan.checkAtEnd 1
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push pointer 0
+push local 1
+call JumperGame.nextLevel 2
+pop temp 0
+label IF_FALSE3
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function JumperGame.level4 4
+push argument 0
+pop pointer 0
+push constant 5
+pop local 2
+push constant 194
+pop local 3
+push this 0
+push local 2
+push local 3
+call JumpMan.respawn 3
+pop temp 0
+push constant 6
+call Array.new 1
+pop local 1
+push constant 0
+push local 1
+add
+push constant 1
+push constant 200
+push constant 100
+push constant 254
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 1
+push local 1
+add
+push constant 115
+push constant 170
+push constant 150
+push constant 180
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 2
+push local 1
+add
+push constant 165
+push constant 140
+push constant 200
+push constant 150
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 3
+push local 1
+add
+push constant 215
+push constant 110
+push constant 250
+push constant 120
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 4
+push local 1
+add
+push constant 265
+push constant 80
+push constant 300
+push constant 90
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 5
+push local 1
+add
+push constant 325
+push constant 50
+push constant 510
+push constant 254
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+label WHILE_EXP0
+push this 2
+not
+push this 1
+push constant 4
+eq
+and
+not
+if-goto WHILE_END0
+call Keyboard.keyPressed 0
+pop local 0
+push local 0
+push constant 81
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+pop this 2
+label IF_FALSE0
+push local 0
+push constant 131
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push this 0
+call JumpMan.jump 1
+pop temp 0
+label IF_FALSE1
+push pointer 0
+push local 1
+call JumperGame.checkOnPlatforms 2
+pop temp 0
+push pointer 0
+push local 1
+call JumperGame.checkAgainstPlatforms 2
+pop temp 0
+push this 0
+call JumpMan.calcVels 1
+pop temp 0
+push pointer 0
+call JumperGame.velocityTruncateForBorder 1
+pop temp 0
+push pointer 0
+push local 1
+call JumperGame.velocityTruncateForPlatforms 2
+pop temp 0
+push this 0
+call JumpMan.moveStep 1
+pop temp 0
+push this 0
+call JumpMan.checkInPit 1
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push this 0
+push local 2
+push local 3
+call JumpMan.respawn 3
+pop temp 0
+label IF_FALSE2
+push this 0
+call JumpMan.checkAtEnd 1
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push pointer 0
+push local 1
+call JumperGame.nextLevel 2
+pop temp 0
+label IF_FALSE3
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function JumperGame.level5 4
+push argument 0
+pop pointer 0
+push constant 5
+pop local 2
+push constant 44
+pop local 3
+push this 0
+push local 2
+push local 3
+call JumpMan.respawn 3
+pop temp 0
+push constant 9
+call Array.new 1
+pop local 1
+push constant 0
+push local 1
+add
+push constant 1
+push constant 50
+push constant 100
+push constant 254
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 1
+push local 1
+add
+push constant 175
+push constant 240
+push constant 185
+push constant 250
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 2
+push local 1
+add
+push constant 215
+push constant 210
+push constant 225
+push constant 220
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 3
+push local 1
+add
+push constant 255
+push constant 240
+push constant 265
+push constant 250
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 4
+push local 1
+add
+push constant 295
+push constant 210
+push constant 305
+push constant 220
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 5
+push local 1
+add
+push constant 335
+push constant 240
+push constant 345
+push constant 250
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 6
+push local 1
+add
+push constant 375
+push constant 210
+push constant 385
+push constant 220
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 7
+push local 1
+add
+push constant 415
+push constant 240
+push constant 425
+push constant 250
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 8
+push local 1
+add
+push constant 455
+push constant 210
+push constant 510
+push constant 220
+call Platform.new 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+label WHILE_EXP0
+push this 2
+not
+push this 1
+push constant 5
+eq
+and
+not
+if-goto WHILE_END0
+call Keyboard.keyPressed 0
+pop local 0
+push local 0
+push constant 81
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+pop this 2
+label IF_FALSE0
+push local 0
+push constant 131
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push this 0
+call JumpMan.jump 1
+pop temp 0
+label IF_FALSE1
+push pointer 0
+push local 1
+call JumperGame.checkOnPlatforms 2
+pop temp 0
+push pointer 0
+push local 1
+call JumperGame.checkAgainstPlatforms 2
+pop temp 0
+push this 0
+call JumpMan.calcVels 1
+pop temp 0
+push pointer 0
+call JumperGame.velocityTruncateForBorder 1
+pop temp 0
+push pointer 0
+push local 1
+call JumperGame.velocityTruncateForPlatforms 2
+pop temp 0
+push this 0
+call JumpMan.moveStep 1
+pop temp 0
+push this 0
+call JumpMan.checkInPit 1
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push this 0
+push local 2
+push local 3
+call JumpMan.respawn 3
+pop temp 0
+label IF_FALSE2
+push this 0
+call JumpMan.checkAtEnd 1
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push pointer 0
+push local 1
+call JumperGame.nextLevel 2
+pop temp 0
+label IF_FALSE3
 goto WHILE_EXP0
 label WHILE_END0
 push constant 0

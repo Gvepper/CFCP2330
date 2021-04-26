@@ -173,6 +173,24 @@ push constant 0
 not
 return
 label IF_END0
+function JumpMan.checkAtEnd 0
+push argument 0
+pop pointer 0
+push pointer 0
+call JumpMan.getEdgeR 1
+push constant 510
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+goto IF_END0
+label IF_FALSE0
+push constant 0
+not
+return
+label IF_END0
 function JumpMan.jump 0
 push argument 0
 pop pointer 0
@@ -180,7 +198,7 @@ push this 5
 if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
-push constant 10
+push constant 9
 neg
 pop this 4
 label IF_FALSE0
@@ -189,7 +207,7 @@ return
 function JumpMan.moveRight 0
 push argument 0
 pop pointer 0
-push constant 5
+push constant 4
 pop this 3
 push constant 0
 return
